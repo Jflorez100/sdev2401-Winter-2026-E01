@@ -81,5 +81,15 @@ def employees_search_results(request, company_id):
                   {'employees': employees, 'query': query, 'company': company})
 
 def create_company(request):
-    form = CompanyForm()
+    if request.method == "Post":
+        form = CompanyForm(request.POST)
+        if form.is_valid():
+            form.save()
+
+            company = form.instance
+            return render(request, "clients/create_company.html", {"form": CompanyForm(), "new_company": company})
+        else:
+            return render(request, "clients/create_company.html", {"form": form})
+
+    form = CompanyForm()        
     return render(request, 'client/create_company.html', {'form': form})
